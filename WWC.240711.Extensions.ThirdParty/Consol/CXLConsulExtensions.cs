@@ -28,7 +28,7 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
                 });
             }
 
-            return services.AddSingleton<IConsulRegisterService>(ConsulRegisterService.CreateInstance());
+            return services.AddSingleton<IConsulRegisterService, ConsulRegisterService>();
         }
 
 

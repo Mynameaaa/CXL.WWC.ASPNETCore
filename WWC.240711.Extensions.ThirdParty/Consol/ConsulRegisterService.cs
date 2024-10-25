@@ -1,5 +1,6 @@
 ﻿using Consul;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Options;
 using Ocelot.Values;
 using Serilog;
 using System;
@@ -9,28 +10,22 @@ using System.Text;
 using System.Threading.Tasks;
 using WWC._240711.ASPNETCore.Infrastructure;
 using WWC._240711.Extensions.ThirdParty.Models;
+using WWC._240711.Extensions.ThirdPartyCache.IService;
 
 namespace WWC._240711.Extensions.ThirdParty;
 
 public class ConsulRegisterService : IConsulRegisterService
 {
-    private ConsulRegisterService()
-    {
+    private readonly List<ConsulClientOptions> consulOptions;
+    private readonly IStringCacheService _stringCacheService;
 
+    private ConsulRegisterService(IOptions<List<ConsulClientOptions>> _consulOptions, IStringCacheService stringCacheService)
+    {
+        consulOptions = _consulOptions.Value;
+        _stringCacheService = stringCacheService;
     }
 
-    private static IConsulRegisterService consulRegister = new ConsulRegisterService();
     public List<string> _disposedServices = new List<string>();
-    private static List<ConsulClientOptions>? consulOptions = Appsettings.app<List<ConsulClientOptions>?>("ConsulClientOptions");
-
-    /// <summary>
-    /// 获取构造函数
-    /// </summary>
-    /// <returns></returns>
-    public static IConsulRegisterService CreateInstance()
-    {
-        return consulRegister;
-    }
 
     /// <summary>
     /// 注册 Consul 服务

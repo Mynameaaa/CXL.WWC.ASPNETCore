@@ -6,38 +6,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WWC._240711.Extensions.ThirdParty.Consol
+namespace WWC._240711.Extensions.ThirdParty;
+
+public interface IConsulRegisterService : IDisposable
 {
-    public interface IConsulRegisterService : IDisposable
-    {
-        /// <summary>
-        /// 注册 Consul 服务
-        /// </summary>
-        /// <param name="client"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        Task<bool> RegisterService(ConsulRegisterServiceModel model);
+    /// <summary>
+    /// 注册 Consul 服务
+    /// </summary>
+    /// <param name="client"></param>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    Task<bool> RegisterService(ConsulRegisterServiceModel model);
 
-        /// <summary>
-        /// 注销服务
-        /// </summary>
-        /// <param name="client"></param>
-        /// <param name="serviceID"></param>
-        /// <returns></returns>
-        Task<bool> StopServiceAsync(string serviceID);
+    /// <summary>
+    /// 注销服务
+    /// </summary>
+    /// <param name="client"></param>
+    /// <param name="serviceID"></param>
+    /// <returns></returns>
+    Task<bool> StopServiceAsync(string serviceID);
 
-        /// <summary>
-        /// 清空服务列表
-        /// </summary>
-        /// <param name="client"></param>
-        /// <returns></returns>
-        Task<bool> StopServicesAsync();
+    /// <summary>
+    /// 清空服务列表
+    /// </summary>
+    /// <param name="client"></param>
+    /// <returns></returns>
+    Task<bool> StopServicesAsync();
 
-        /// <summary>
-        /// 是否存在 Consul 节点
-        /// </summary>
-        /// <returns></returns>
-        public bool HasConsulPoint();
+    /// <summary>
+    /// 是否存在 Consul 节点
+    /// </summary>
+    /// <returns></returns>
+    public bool HasConsulPoint();
 
-    }
 }

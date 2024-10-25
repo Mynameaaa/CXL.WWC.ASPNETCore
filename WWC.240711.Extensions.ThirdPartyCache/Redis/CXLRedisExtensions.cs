@@ -29,6 +29,8 @@ namespace WWC._240711.Extensions.ThirdPartyCache.Redis
             return services.AddSingleton<CSRedisClient>(csredis);
         }
 
+
+
         /// <summary>
         /// 组装链接信息
         /// </summary>
@@ -63,6 +65,7 @@ namespace WWC._240711.Extensions.ThirdPartyCache.Redis
                 if (connect.MaxIdleTime.HasValue)
                     connectSB.Append($";maxIdleTime={connect.MaxIdleTime}");
 
+                results.Add(connectSB.ToString());
             }
             return results.ToArray();
         }
