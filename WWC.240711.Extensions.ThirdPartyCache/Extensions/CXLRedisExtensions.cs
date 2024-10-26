@@ -1,5 +1,6 @@
 ﻿using CSRedis;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WWC._240711.ASPNETCore.Infrastructure;
 using WWC._240711.Extensions.ThirdParty.Models;
+using WWC._240711.Extensions.ThirdPartyCache.IService;
+using WWC._240711.Extensions.ThirdPartyCache.Service;
 
 namespace WWC._240711.Extensions.ThirdPartyCache.Redis
 {
@@ -26,10 +29,20 @@ namespace WWC._240711.Extensions.ThirdPartyCache.Redis
             string[] redisClusterNodes = AssembleConnect(connectOptions);
             var csredis = new CSRedisClient(null, redisClusterNodes);
             RedisHelper.Initialization(csredis);
+            services.TryAddTransient<IStringCacheService, RedisStringCacheService>();
             return services.AddSingleton<CSRedisClient>(csredis);
         }
 
-
+        /// <summary>
+        /// 添加内存缓存
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddCXLMemoryCache(this IServiceCollection services)
+        {
+            services.TryAddTransient<IStringCacheService, MemoryStringCacheService>();
+            return services.AddMemoryCache();
+        }
 
         /// <summary>
         /// 组装链接信息
@@ -69,6 +82,5 @@ namespace WWC._240711.Extensions.ThirdPartyCache.Redis
             }
             return results.ToArray();
         }
-
     }
 }
