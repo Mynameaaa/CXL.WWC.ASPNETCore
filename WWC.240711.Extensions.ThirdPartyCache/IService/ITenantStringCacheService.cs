@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace WWC._240711.Extensions.ThirdPartyCache.IService
 {
-    public interface ITenantStringCacheService
+    public interface ITenantStringCacheService : IStringCacheService
     {
+        /// <summary>
+        /// 获取当前租户 Key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        string GetTenantKey(string key);
 
     }
 }

@@ -311,11 +311,11 @@ public class CXLAuthenticationHandler : AuthenticationHandler<CXLAuthenticationS
         if (remoteMapping is null || !remoteMapping.Any())
             return;
 
+        this.Context.Request.Headers["auth-HasClaims"] = "true";
         foreach (var mapping in remoteMapping)
         {
             this.Context.Request.Headers[mapping.HeaderKey] = claimsPrincipal.Claims.FirstOrDefault(p => p.Type.Equals(mapping.ClaimKey, StringComparison.OrdinalIgnoreCase))?.Value ?? "";
         }
-
     }
 
     protected override Task HandleForbiddenAsync(AuthenticationProperties properties)

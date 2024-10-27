@@ -14,15 +14,13 @@ using WWC._240711.Extensions.ThirdPartyCache.IService;
 
 namespace WWC._240711.Extensions.ThirdParty;
 
-public class ConsulRegisterService : IConsulRegisterService
+public class ConsulManagerService : IConsulManagerService
 {
     private readonly List<ConsulClientOptions> consulOptions;
-    private readonly IStringCacheService _stringCacheService;
 
-    private ConsulRegisterService(IOptions<List<ConsulClientOptions>> _consulOptions, IStringCacheService stringCacheService)
+    private ConsulManagerService(IOptions<List<ConsulClientOptions>> _consulOptions)
     {
         consulOptions = _consulOptions.Value;
-        _stringCacheService = stringCacheService;
     }
 
     public List<string> _disposedServices = new List<string>();
@@ -177,13 +175,4 @@ public class ConsulRegisterService : IConsulRegisterService
 
         return false;
     }
-
-    /// <summary>
-    /// 释放资源
-    /// </summary>
-    public void Dispose()
-    {
-
-    }
-
 }

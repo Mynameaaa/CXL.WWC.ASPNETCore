@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WWC._240711.Extensions.ThirdParty;
 
-public interface IConsulRegisterService : IDisposable
+public interface IConsulManagerService
 {
     /// <summary>
     /// 注册 Consul 服务

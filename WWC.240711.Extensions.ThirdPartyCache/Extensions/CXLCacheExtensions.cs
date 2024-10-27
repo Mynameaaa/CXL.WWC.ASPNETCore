@@ -1,6 +1,7 @@
 ﻿using CSRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Ocelot.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,32 @@ using System.Threading.Tasks;
 using WWC._240711.ASPNETCore.Infrastructure;
 using WWC._240711.Extensions.ThirdParty.Models;
 using WWC._240711.Extensions.ThirdPartyCache.IService;
+using WWC._240711.Extensions.ThirdPartyCache.Options;
 using WWC._240711.Extensions.ThirdPartyCache.Service;
 
 namespace WWC._240711.Extensions.ThirdPartyCache.Redis
 {
-    public static class CXLRedisExtensions
+    public static class CXLCacheExtensions
     {
 
         /// <summary>
         /// 添加 Redis 作为缓存
-        /// </summary>
+        /// </summary>`
         /// <returns></returns>
-        public static IServiceCollection AddCXLRedisCache(this IServiceCollection services)
+        public static IServiceCollection AddCXLRedisCache(this IServiceCollection services, List<RedisConnectOptions> redisConnects = null)
         {
-            var connectOptions = Appsettings.app<List<RedisConnectOptions>?>("RedisConnectOptions");
-            if (connectOptions == null || !connectOptions.Any())
-                return services;
+            if (redisConnects == null || !redisConnects.Any())
+            {
+                redisConnects = Appsettings.app<List<RedisConnectOptions>?>("RedisConnectOptions");
+                if (redisConnects == null || !redisConnects.Any())
+                    return services;
+            }
 
-            string[] redisClusterNodes = AssembleConnect(connectOptions);
+            string[] redisClusterNodes = AssembleConnect(redisConnects);
             var csredis = new CSRedisClient(null, redisClusterNodes);
             RedisHelper.Initialization(csredis);
             services.TryAddTransient<IStringCacheService, RedisStringCacheService>();
+            services.TryAddTransient<ITenantStringCacheService, TenantRedisStringCacheService>();
             return services.AddSingleton<CSRedisClient>(csredis);
         }
 
@@ -38,8 +44,11 @@ namespace WWC._240711.Extensions.ThirdPartyCache.Redis
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddCXLMemoryCache(this IServiceCollection services)
+        public static IServiceCollection AddCXLMemoryCache(this IServiceCollection services, MemoryCahceOptions cahceOptions = null)
         {
+            if (cahceOptions is null)
+                cahceOptions = Appsettings.app<MemoryCahceOptions?>("MemoryCahceOptions");
+
             services.TryAddTransient<IStringCacheService, MemoryStringCacheService>();
             return services.AddMemoryCache();
         }
@@ -51,6 +60,7 @@ namespace WWC._240711.Extensions.ThirdPartyCache.Redis
         /// <returns></returns>
         private static string[] AssembleConnect(List<RedisConnectOptions> connectOptions)
         {
+
             List<string> results = new List<string>();
 
             foreach (var connect in connectOptions)
