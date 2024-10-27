@@ -24,14 +24,14 @@ public interface IConsulManagerService
     /// <param name="client"></param>
     /// <param name="serviceID"></param>
     /// <returns></returns>
-    Task<bool> StopServiceAsync(string serviceID);
+    Task<bool> StopServiceAsync(string serviceName, string serviceID);
 
     /// <summary>
     /// 清空服务列表
     /// </summary>
     /// <param name="client"></param>
     /// <returns></returns>
-    Task<bool> StopServicesAsync();
+    Task<bool> StopServicesAsync(string serviceName);
 
     /// <summary>
     /// 是否存在 Consul 节点

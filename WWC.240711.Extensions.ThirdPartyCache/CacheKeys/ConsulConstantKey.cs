@@ -12,7 +12,11 @@ namespace WWC._240711.Extensions.ThirdPartyCache.CacheKeys
     public class ConsulConstantKey
     {
 
-        public const string ConsulServiceKey = "Consul:{0}Service";
+        //Consul服务标签
+        public const string ConsulTagKey = "ConsulTag:{0}";
+
+        //Consul服务名称
+        public const string ConsulNameKey = "ConsulName:{0}";
 
     }
 }

@@ -20,9 +20,9 @@ public class ConsulRegisterServiceModel
     public string ServiceName { get; set; }
 
     /// <summary>
-    /// 结束时是否释放
+    /// 结束时是否自动释放
     /// </summary>
-    public bool IsDisposed { get; set; }
+    public bool AutoDisposed { get; set; }
 
     /// <summary>
     /// 健康检查地址

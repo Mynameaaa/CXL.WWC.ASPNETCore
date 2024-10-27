@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WWC._240711.ASPNETCore.Infrastructure;
+using WWC._240711.Extensions.ThirdParty.Consol;
 using WWC._240711.Extensions.ThirdParty.Models;
 using WWC._240711.Extensions.ThirdPartyCache.IService;
 
@@ -17,10 +18,13 @@ namespace WWC._240711.Extensions.ThirdParty;
 public class ConsulManagerService : IConsulManagerService
 {
     private readonly List<ConsulClientOptions> consulOptions;
+    private readonly IConsulCacheService _consulCacheService;
 
-    private ConsulManagerService(IOptions<List<ConsulClientOptions>> _consulOptions)
+    private ConsulManagerService(IOptions<List<ConsulClientOptions>> _consulOptions
+        , IConsulCacheService consulCacheService)
     {
         consulOptions = _consulOptions.Value;
+        _consulCacheService = consulCacheService;
     }
 
     public List<string> _disposedServices = new List<string>();
@@ -57,11 +61,6 @@ public class ConsulManagerService : IConsulManagerService
 
         var registerResult = await ResgisterService(registration);
 
-        if (model.IsDisposed && registerResult)
-        {
-            _disposedServices.Add(model.ServiceID);
-        }
-
         return registerResult;
     }
 
@@ -71,13 +70,12 @@ public class ConsulManagerService : IConsulManagerService
     /// <param name="client"></param>
     /// <param name="serviceID"></param>
     /// <returns></returns>
-    public async Task<bool> StopServiceAsync(string serviceID)
+    public async Task<bool> StopServiceAsync(string serviceName, string serviceID)
     {
         if (!HasConsulPoint())
             return false;
 
-        var res = await StopServicesAsync([serviceID]);
-        _disposedServices.Remove(serviceID);
+        var res = await StopServicesAsync(serviceName, [serviceID]);
         return res;
     }
 
@@ -86,17 +84,14 @@ public class ConsulManagerService : IConsulManagerService
     /// </summary>
     /// <param name="client"></param>
     /// <returns></returns>
-    public async Task<bool> StopServicesAsync()
+    public async Task<bool> StopServicesAsync(string serviceName)
     {
         if (!HasConsulPoint())
             return false;
 
-        if (_disposedServices.Any())
-        {
-            var res = await StopServicesAsync(_disposedServices);
-            _disposedServices.Clear();
-            return res;
-        }
+        var res = await ClearServicesAsync(serviceName);
+        if (res)
+            await _consulCacheService.StopServices(serviceName);
         return true;
     }
 
@@ -146,7 +141,7 @@ public class ConsulManagerService : IConsulManagerService
     /// </summary>
     /// <param name="serviceID"></param>
     /// <returns></returns>
-    private async Task<bool> StopServicesAsync(List<string> serviceIDs)
+    private async Task<bool> StopServicesAsync(string serviceName, List<string> serviceIDs)
     {
         if (!HasConsulPoint())
             return false;
@@ -162,6 +157,7 @@ public class ConsulManagerService : IConsulManagerService
                     foreach (var serviceID in serviceIDs)
                     {
                         await consulClient.Agent.ServiceDeregister(serviceID);
+                        await _consulCacheService.StopServiceID(serviceName, serviceID);
                         Log.Logger.Information($"服务注销成功，ServiceID：【{serviceID}】");
                     }
                     return true;
@@ -175,4 +171,41 @@ public class ConsulManagerService : IConsulManagerService
 
         return false;
     }
+
+    /// <summary>
+    /// 清空服务组
+    /// </summary>
+    /// <param name="serviceID"></param>
+    /// <returns></returns>
+    private async Task<bool> ClearServicesAsync(string serviceName)
+    {
+        if (!HasConsulPoint())
+            return false;
+
+        // 遍历所有的 Consul 地址，分别注册服务
+        foreach (var model in consulOptions!)
+        {
+            var address = model.Host + ":" + model.Port;
+            try
+            {
+                using (var consulClient = new ConsulClient(config => config.Address = new Uri(address)))
+                {
+                    var serviceIDs = await _consulCacheService.GetServicesByName(serviceName);
+                    foreach (var serviceID in serviceIDs)
+                    {
+                        await consulClient.Agent.ServiceDeregister(serviceID);
+                        await _consulCacheService.StopServiceID(serviceName, serviceID);
+                        Log.Logger.Information($"服务注销成功，ServiceID：【{serviceID}】");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"连接到 Consul 失败，Consul 连接信息：【{address}】");
+            }
+        }
+
+        return false;
+    }
+
 }
