@@ -23,6 +23,15 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
         Task<bool> CacheServiceName(string serviceName, string serviceID, bool autoDisposed = false);
 
         /// <summary>
+        /// 缓存服务
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <param name="serviceID"></param>
+        /// <param name="autoDisposed"></param>
+        /// <returns></returns>
+        Task<bool> CacheService(string serviceName, AgentServiceRegistration registration, bool autoDisposed = false);
+
+        /// <summary>
         /// 停止服务组
         /// </summary>
         /// <param name="serviceName"></param>

@@ -1,18 +1,8 @@
 ﻿using Consul;
-using Consul.Filtering;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
-using Ocelot.Values;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WWC._240711.ASPNETCore.Infrastructure;
 using WWC._240711.Extensions.ThirdParty.Consol;
 using WWC._240711.Extensions.ThirdParty.Models;
-using WWC._240711.Extensions.ThirdPartyCache.IService;
 using WWC._240711.Extensions.ThirdPartyCache.Models;
 
 namespace WWC._240711.Extensions.ThirdParty;

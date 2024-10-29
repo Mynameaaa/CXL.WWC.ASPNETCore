@@ -174,6 +174,7 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
                     case CacheType.ZSet:
                         break;
                     case CacheType.Hash:
+                        _hashCacheService.ClearHash(item.Key);
                         break;
                     case CacheType.List:
                         break;
