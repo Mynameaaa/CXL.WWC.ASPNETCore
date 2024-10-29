@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Consul;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,16 +14,18 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
     {
         private readonly IStringCacheService _stringCacheService;
         private readonly ISetCacheService _setCacheService;
-        //public List<(CacheType, string)> _disposedServiceKey = new List<(CacheType, string)>();
-
-        public Dictionary<string, CacheType> _disposedServiceKey = new Dictionary<string, CacheType>();
+        private readonly IHashCacheService _hashCacheService;
 
         public ConsulCacheService(IStringCacheService stringCacheService
-            , ISetCacheService setCacheService)
+            , ISetCacheService setCacheService
+            , IHashCacheService hashCacheService)
         {
             _stringCacheService = stringCacheService;
             _setCacheService = setCacheService;
+            _hashCacheService = hashCacheService;
         }
+
+        public Dictionary<string, CacheType> _disposedServiceKey = new Dictionary<string, CacheType>();
 
         ///// <summary>
         ///// 缓存 Tag
@@ -44,7 +47,7 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
         /// <returns></returns>
         public async Task<bool> CacheServiceName(string serviceName, string serviceID, bool autoDisposed = false)
         {
-            string key = string.Format(ConsulConstantKey.ConsulNameKey, serviceName);
+            string key = string.Format(ConsulConstantKey.ConsulServiceNameKey, serviceName);
             var result = await _setCacheService.AddToSetAsync(key, serviceID);
             if (result && !_disposedServiceKey.Any(p => p.Value.Equals(key)) && autoDisposed)
             {
@@ -54,14 +57,55 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
         }
 
         /// <summary>
+        /// 缓存服务
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <param name="serviceID"></param>
+        /// <param name="autoDisposed"></param>
+        /// <returns></returns>
+        public async Task<bool> CacheService(string serviceName, AgentServiceRegistration registration, bool autoDisposed = false)
+        {
+            string key = string.Format(ConsulConstantKey.ConsulServiceNameKey, serviceName);
+            var cacheModel = new AgentServiceRegistrationCache()
+            {
+                Host = registration.Address,
+                Port = registration.Port,
+                ServiceID = registration.ID,
+                ServiceName = registration.Name,
+                ServiceTag = registration.Tags
+            };
+            var result = await _hashCacheService.AddToHashAsync(key, cacheModel.ServiceID, cacheModel);
+            if (result && !_disposedServiceKey.Any(p => p.Value.Equals(key)) && autoDisposed)
+            {
+                _disposedServiceKey.Add(key, CacheType.Hash);
+            }
+            return result;
+        }
+
+        ///// <summary>
+        ///// 停止服务组
+        ///// </summary>
+        ///// <param name="serviceName"></param>
+        ///// <returns></returns>
+        //public async Task<bool> StopServices(string serviceName)
+        //{
+        //    string key = string.Format(ConsulConstantKey.ConsulNameKey, serviceName);
+        //    return await _setCacheService.ClearSetAsync(key);
+        //}
+
+        /// <summary>
         /// 停止服务组
         /// </summary>
         /// <param name="serviceName"></param>
         /// <returns></returns>
         public async Task<bool> StopServices(string serviceName)
         {
-            string key = string.Format(ConsulConstantKey.ConsulNameKey, serviceName);
-            return await _setCacheService.ClearSetAsync(key);
+            string key = string.Format(ConsulConstantKey.ConsulServiceNameKey, serviceName);
+            var result = _disposedServiceKey.Remove(key);
+            if (result)
+                return await _hashCacheService.ClearHashAsync(key);
+            else
+                return result;
         }
 
         /// <summary>
@@ -72,28 +116,45 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
         /// <returns></returns>
         public async Task<bool> StopServiceID(string serviceName, string serviceID)
         {
-            string key = string.Format(ConsulConstantKey.ConsulNameKey, serviceName);
-            return await _setCacheService.RemoveFromSetAsync(key, serviceID);
+            string key = string.Format(ConsulConstantKey.ConsulServiceNameKey, serviceName);
+            return await _hashCacheService.RemoveFieldAsync(key, serviceID);
         }
 
         /// <summary>
-        /// 获取服务名称下任意服务编号
+        /// 获取服务名称下任意服务
         /// </summary>
         /// <returns></returns>
-        public async Task<string> GetServiceID(string serviceName)
+        public async Task<AgentServiceRegistrationCache> GetRandomService(string serviceName)
         {
-            string key = string.Format(ConsulConstantKey.ConsulNameKey, serviceName);
-            return await _setCacheService.GetRandomMemberAsync(key);
+            string key = string.Format(ConsulConstantKey.ConsulServiceNameKey, serviceName);
+            return await _hashCacheService.GetRandomFieldValueAsync<AgentServiceRegistrationCache>(key);
         }
 
         /// <summary>
         /// 获取服务名称下全部服务
         /// </summary>
         /// <returns></returns>
-        public async Task<HashSet<string>> GetServicesByName(string serviceName)
+        public async Task<Dictionary<string, AgentServiceRegistrationCache>> GetAllServicesByName(string serviceName)
         {
-            string key = string.Format(ConsulConstantKey.ConsulNameKey, serviceName);
-            return await _setCacheService.GetAllMembersAsync(key);
+            string key = string.Format(ConsulConstantKey.ConsulServiceNameKey, serviceName);
+            return await _hashCacheService.GetAllFieldsAsync<AgentServiceRegistrationCache>(key);
+        }
+
+        /// <summary>
+        /// 缓存一组服务
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <param name="registration"></param>
+        /// <param name="autoDisposed"></param>
+        /// <returns></returns>
+        public async Task<bool> CacheServices(string serviceName, IEnumerable<AgentServiceRegistrationCache> registration, bool autoDisposed = false)
+        {
+            string key = string.Format(ConsulConstantKey.ConsulServiceNameKey, serviceName);
+            var cacheDirs = registration.Select(sl =>
+            {
+                return new KeyValuePair<string, AgentServiceRegistrationCache>(sl.ServiceID, sl);
+            }).ToDictionary();
+            return await _hashCacheService.AddMultipleToHashAsync(key, cacheDirs);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Consul;
+using Consul.Filtering;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 using Ocelot.Values;
@@ -12,6 +13,7 @@ using WWC._240711.ASPNETCore.Infrastructure;
 using WWC._240711.Extensions.ThirdParty.Consol;
 using WWC._240711.Extensions.ThirdParty.Models;
 using WWC._240711.Extensions.ThirdPartyCache.IService;
+using WWC._240711.Extensions.ThirdPartyCache.Models;
 
 namespace WWC._240711.Extensions.ThirdParty;
 
@@ -114,6 +116,8 @@ public class ConsulManagerService : IConsulManagerService
         if (!HasConsulPoint())
             return false;
 
+        var result = false;
+
         // 遍历所有的 Consul 地址，分别注册服务
         foreach (var model in consulOptions!)
         {
@@ -124,7 +128,8 @@ public class ConsulManagerService : IConsulManagerService
                 {
                     await consulClient.Agent.ServiceRegister(registration);
                     Log.Logger.Information($"服务注册成功，Service：【{registration.Address + ":" + registration.Port}】，ServiceID：【{registration.ID}】，Consul：【{address}】");
-                    return true;
+                    result = true;
+                    break;
                 }
             }
             catch (Exception ex)
@@ -133,7 +138,7 @@ public class ConsulManagerService : IConsulManagerService
             }
         }
 
-        return false;
+        return result;
     }
 
     /// <summary>
@@ -190,12 +195,14 @@ public class ConsulManagerService : IConsulManagerService
             {
                 using (var consulClient = new ConsulClient(config => config.Address = new Uri(address)))
                 {
-                    var serviceIDs = await _consulCacheService.GetServicesByName(serviceName);
-                    foreach (var serviceID in serviceIDs)
+                    var serviceInfos = await _consulCacheService.GetAllServicesByName(serviceName);
+                    foreach (var serviceKeyV in serviceInfos)
                     {
-                        await consulClient.Agent.ServiceDeregister(serviceID);
-                        await _consulCacheService.StopServiceID(serviceName, serviceID);
-                        Log.Logger.Information($"服务注销成功，ServiceID：【{serviceID}】");
+                        var service = serviceKeyV.Value;
+
+                        await consulClient.Agent.ServiceDeregister(service.ServiceID);
+                        await _consulCacheService.StopServiceID(serviceName, service.ServiceID);
+                        Log.Logger.Information($"服务注销成功，ServiceID：【{service.ServiceID}】");
                     }
                 }
             }
@@ -206,6 +213,59 @@ public class ConsulManagerService : IConsulManagerService
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 根据名称获取服务组任意服务
+    /// </summary>
+    /// <param name="serviceName"></param>
+    /// <returns></returns>
+    public async Task<AgentServiceRegistrationCache> GetServiceByName(string serviceName)
+    {
+        var serviceInfo = await _consulCacheService.GetRandomService(serviceName);
+        if (serviceInfo != null)
+        {
+            return serviceInfo;
+        }
+
+        var result = default(AgentServiceRegistrationCache);
+
+        // 遍历所有的 Consul 地址，分别注册服务
+        foreach (var model in consulOptions!)
+        {
+            var address = model.Host + ":" + model.Port;
+            try
+            {
+                using (var consulClient = new ConsulClient(config => config.Address = new Uri(address)))
+                {
+                    var servicesResponse = await consulClient.Catalog.Service(serviceName);
+                    var services = servicesResponse.Response;
+                    if (services != null && services.Any())
+                    {
+                        var cacheModels = services.Select(sl => new AgentServiceRegistrationCache()
+                        {
+                            Host = sl.Address,
+                            Port = sl.ServicePort,
+                            ServiceID = sl.ServiceID,
+                            ServiceName = sl.ServiceName,
+                            ServiceTag = sl.ServiceTags,
+                            Node = sl.Node,
+                        });
+
+                        result = cacheModels.FirstOrDefault();
+
+                        var cache = await _consulCacheService.CacheServices(serviceName, cacheModels);
+
+                        return result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"连接到 Consul 失败，Consul 连接信息：【{address}】");
+            }
+        }
+        return result;
     }
 
 }

@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace WWC._240711.Extensions.ThirdPartyCache.IService
 {
-    public interface ITenantSetCahceService
+    public interface ITenantSetCahceService : ISetCacheService
     {
+
+        /// <summary>
+        /// 获取当前租户 Key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        string GetTenantKey(string key);
+
     }
 }

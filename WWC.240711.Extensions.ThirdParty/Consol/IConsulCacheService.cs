@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Consul;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,16 +38,24 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
         Task<bool> StopServiceID(string serviceName, string serviceID);
 
         /// <summary>
-        /// 获取服务名称下任意服务编号
+        /// 获取服务名称下任意服务
         /// </summary>
         /// <returns></returns>
-        Task<string> GetServiceID(string serviceName);
+        Task<AgentServiceRegistrationCache> GetRandomService(string serviceName);
 
         /// <summary>
         /// 获取服务名称下全部服务
         /// </summary>
         /// <returns></returns>
-        Task<HashSet<string>> GetServicesByName(string serviceName);
+        Task<Dictionary<string, AgentServiceRegistrationCache>> GetAllServicesByName(string serviceName);
 
+        /// <summary>
+        /// 缓存一组服务
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <param name="registration"></param>
+        /// <param name="autoDisposed"></param>
+        /// <returns></returns>
+        Task<bool> CacheServices(string serviceName, IEnumerable<AgentServiceRegistrationCache> registration, bool autoDisposed = false);
     }
 }

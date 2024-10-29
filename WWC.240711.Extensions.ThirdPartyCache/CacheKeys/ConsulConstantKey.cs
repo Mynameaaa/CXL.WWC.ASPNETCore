@@ -13,10 +13,10 @@ namespace WWC._240711.Extensions.ThirdPartyCache.CacheKeys
     {
 
         //Consul服务标签
-        public const string ConsulTagKey = "ConsulTag:{0}";
+        public const string ConsulServiceTagKey = "ConsulTag:{0}";
 
         //Consul服务名称
-        public const string ConsulNameKey = "ConsulName:{0}";
+        public const string ConsulServiceNameKey = "ConsulName:{0}";
 
     }
 }
