@@ -26,7 +26,6 @@ namespace WWC._240711.Extensions.ThirdPartyCache.Service
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public string GetTenantKey(string key)
         {
             return _cXLUserClaimsService.GetTenantID() + "-" + key;

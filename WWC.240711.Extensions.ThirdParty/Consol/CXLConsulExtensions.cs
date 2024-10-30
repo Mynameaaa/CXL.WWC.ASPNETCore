@@ -28,7 +28,8 @@ namespace WWC._240711.Extensions.ThirdParty.Consol
                 });
             }
 
-            return services.AddSingleton<IConsulManagerService, ConsulManagerService>();
+            services.AddSingleton<IConsulCacheService, ConsulCacheService>();
+            return services.AddTransient<IConsulManagerService, ConsulManagerService>();
         }
 
 

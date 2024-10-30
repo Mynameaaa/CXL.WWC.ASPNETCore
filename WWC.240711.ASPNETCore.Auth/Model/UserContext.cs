@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using WWC._240711.ASPNETCore.Infrastructure;
 
 namespace WWC._240711.ASPNETCore.Auth;
 
@@ -14,6 +15,8 @@ public class UserContext
     {
         if (claims == null)
             return;
+
+        var cliamsKeys = Appsettings.app("");
 
         TokenDataModel.Role = claims.FirstOrDefault(p => p.Type == "Role")?.Value ?? string.Empty;
         TokenDataModel.Username = claims.FirstOrDefault(p => p.Type == "Name")?.Value ?? string.Empty;
