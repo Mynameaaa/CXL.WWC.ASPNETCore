@@ -12,7 +12,6 @@ public static class CXLAuthorizationExtensions
         services.TryAddEnumerable(ServiceDescriptor.Transient<IAuthorizationHandler, CXLAuthorizationHandler>());
         services.TryAddEnumerable(ServiceDescriptor.Transient<IAuthorizationHandler, CXLAuthorizationDelegateHandler>());
 
-
         //注册一个处理多个 Requirement 的 IAuthorizationHandler 
         services.TryAddEnumerable(ServiceDescriptor.Transient<IAuthorizationHandler, CXLAuthorizationAllRequirementHandler>());
 

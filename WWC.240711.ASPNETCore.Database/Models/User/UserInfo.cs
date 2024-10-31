@@ -1,17 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WWC._240711.ASPNETCore.Database.Extensions.Enum;
 
 namespace WWC._240711.ASPNETCore.Database.Models;
 
-public class UserInfo
+/// <summary>
+/// 用户资料
+/// </summary>
+public class UserInfo : SaveUser
 {
+    /// <summary>
+    /// 用户编号
+    /// </summary>
+    [Key]
+    public long UserID { get; set; }
 
     /// <summary>
     /// 用户名称
     /// </summary>
+    [Column(TypeName = "nvarchar(30)")]
     public string UserName { get; set; }
 
+    /// <summary>
+    /// 用户手机号
+    /// </summary>
+    [Column(TypeName = "nvarchar(30)")]
+    public string UserPhoneNumber { get; set; }
+
+    /// <summary>
+    /// 登陆账号
+    /// </summary>
+    [Column(TypeName = "nvarchar(30)")]
+    public string UserAccount { get; set; }
+
+    /// <summary>
+    /// 密码
+    /// </summary>
+    [Column(TypeName = "nvarchar(30)")]
+    public string UserPassword { get; set; }
+
+    /// <summary>
+    /// 用户状态
+    /// </summary>
+    public UserState UserState { get; set; }
+
+    /// <summary>
+    /// 创建人编号
+    /// </summary>
+    public long CreateID { get; set; }
+
+    /// <summary>
+    /// 创建人名称
+    /// </summary>
+    public string CreateName { get; set; }
+
+    /// <summary>
+    /// 创建时间
+    /// </summary>
+    public DateTime CreateTime { get; set; }
+
+    /// <summary>
+    /// 修改人编号
+    /// </summary>
+    public long UpdateID { get; set; }
+
+    /// <summary>
+    /// 修改人名称
+    /// </summary>
+    public string UpdateName { get; set; }
+
+    /// <summary>
+    /// 修改时间
+    /// </summary>
+    public DateTime UpdateTime { get; set; }
 }

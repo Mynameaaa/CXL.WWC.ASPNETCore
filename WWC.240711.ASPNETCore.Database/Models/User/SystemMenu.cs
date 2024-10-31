@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WWC._240711.ASPNETCore.Database.Models;
 
-public class SystemMenu
+public class SystemMenu : SaveUser
 {
 
     /// <summary>
@@ -38,5 +38,35 @@ public class SystemMenu
     /// 是否禁用
     /// </summary>
     public bool IsDisable { get; set; }
+
+    /// <summary>
+    /// 创建人编号
+    /// </summary>
+    public long CreateID { get; set; }
+
+    /// <summary>
+    /// 创建人名称
+    /// </summary>
+    public string CreateName { get; set; }
+
+    /// <summary>
+    /// 创建时间
+    /// </summary>
+    public DateTime CreateTime { get; set; }
+
+    /// <summary>
+    /// 修改人编号
+    /// </summary>
+    public long UpdateID { get; set; }
+
+    /// <summary>
+    /// 修改人名称
+    /// </summary>
+    public string UpdateName { get; set; }
+
+    /// <summary>
+    /// 修改时间
+    /// </summary>
+    public DateTime UpdateTime { get; set; }
 
 }

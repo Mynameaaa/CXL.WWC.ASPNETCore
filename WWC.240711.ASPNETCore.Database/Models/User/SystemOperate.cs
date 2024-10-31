@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace WWC._240711.ASPNETCore.Database.Models;
 
-public class SystemPower : SaveUser
+/// <summary>
+/// 页面操作项
+/// </summary>
+public class SystemOperate : SaveUser
 {
 
     /// <summary>
-    /// 权限名称
+    /// 操作名称
     /// </summary>
-    public string PowerName { get; set; }
-
+    public string OperateName { get; set; }
 
     /// <summary>
     /// 创建人编号
@@ -44,4 +46,5 @@ public class SystemPower : SaveUser
     /// 修改时间
     /// </summary>
     public DateTime UpdateTime { get; set; }
+
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WWC._240711.ASPNETCore.Database.Models;
 
 namespace WWC._240711.ASPNETCore.Database.EFCore;
 
@@ -15,7 +16,45 @@ namespace WWC._240711.ASPNETCore.Database.EFCore;
 public class SystemDbContext : DbContext
 {
 
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<SystemMenu> SystemMenus { get; set; }
 
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<SystemPower> SystemPowers { get; set; }
+
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<SystemPowerMenuMapping> SystemPowerMenuMappings { get; set; }
+
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<SystemRole> SystemRoles { get; set; }
+
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<SystemRolePowerMapping> SystemRolePowerMappings { get; set; }
+
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<SystemUserMenuMapping> SystemUserMenuMappings { get; set; }
+
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<SystemUserRoleMapping> SystemUserRoleMappings { get; set; }
+
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public virtual DbSet<UserInfo> UserInfo { get; set; }
 
     /// <summary>
     /// 

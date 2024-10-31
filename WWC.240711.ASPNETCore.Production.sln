@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WWC.240711.ASPNETCore.AuthP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WWC.240711.ASPNETCore.FileServer", "WWC.240711.ASPNETCore.FileServer\WWC.240711.ASPNETCore.FileServer.csproj", "{37186948-4024-4395-96AD-E4F551610D88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WWC.240711.Extensions.ThirdPartyCache", "WWC.240711.Extensions.ThirdPartyCache\WWC.240711.Extensions.ThirdPartyCache.csproj", "{40D9D069-A983-4BB9-AE6E-4C1137E82B31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WWC.240711.Extensions.ThirdPartyCache", "WWC.240711.Extensions.ThirdPartyCache\WWC.240711.Extensions.ThirdPartyCache.csproj", "{40D9D069-A983-4BB9-AE6E-4C1137E82B31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WWC.240711.ASPNETCore.Service", "WWC.240711.ASPNETCore.Service\WWC.240711.ASPNETCore.Service.csproj", "{9825C298-ABB1-4616-A89B-1A61932EC90B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{40D9D069-A983-4BB9-AE6E-4C1137E82B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40D9D069-A983-4BB9-AE6E-4C1137E82B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40D9D069-A983-4BB9-AE6E-4C1137E82B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9825C298-ABB1-4616-A89B-1A61932EC90B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9825C298-ABB1-4616-A89B-1A61932EC90B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9825C298-ABB1-4616-A89B-1A61932EC90B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9825C298-ABB1-4616-A89B-1A61932EC90B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
