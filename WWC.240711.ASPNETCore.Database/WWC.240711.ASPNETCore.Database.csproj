@@ -20,4 +20,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WWC.240711.ASPNETCore.Infrastructure\WWC.240711.ASPNETCore.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="User\Dto\" />
+    <ProjectReference Include="..\WWC.240711.ASPNETCore.Database\WWC.240711.ASPNETCore.Database.csproj" />
+    <ProjectReference Include="..\WWC.240711.Extensions.ThirdPartyCache\WWC.240711.Extensions.ThirdPartyCache.csproj" />
   </ItemGroup>
 
 </Project>
