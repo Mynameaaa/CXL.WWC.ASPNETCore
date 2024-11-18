@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace WWC._240711.ASPNETCore.Database.Models;
 
 public class SystemMenu : SaveUser
 {
+    public long MenuID { get; set; }
 
     /// <summary>
     /// 菜单 Key
@@ -68,5 +70,16 @@ public class SystemMenu : SaveUser
     /// 修改时间
     /// </summary>
     public DateTime UpdateTime { get; set; }
+
+    /// <summary>
+    /// 权限列表
+    /// </summary>
+    public ICollection<SystemPower> ListSystemPower { get; set; } = new List<SystemPower>();
+
+    /// <summary>
+    /// 操作列表
+    /// </summary>
+    [InverseProperty(nameof(SystemOperate.Menu))]
+    public ICollection<SystemOperate> ListSystemOperate { get; set; } = new List<SystemOperate>();
 
 }

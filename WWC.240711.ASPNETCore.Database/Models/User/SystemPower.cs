@@ -8,6 +8,7 @@ namespace WWC._240711.ASPNETCore.Database.Models;
 
 public class SystemPower : SaveUser
 {
+    public long PowerID { get; set; }
 
     /// <summary>
     /// 权限名称
@@ -44,4 +45,15 @@ public class SystemPower : SaveUser
     /// 修改时间
     /// </summary>
     public DateTime UpdateTime { get; set; }
+
+    /// <summary>
+    /// 菜单列表
+    /// </summary>
+    public ICollection<SystemMenu> ListSystemMenu { get; set; } = new List<SystemMenu>();
+
+    /// <summary>
+    /// 权限列表
+    /// </summary>
+    public ICollection<SystemRole> ListSystemRole { get; set; } = new List<SystemRole>();
+
 }

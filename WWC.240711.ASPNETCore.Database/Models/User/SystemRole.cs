@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace WWC._240711.ASPNETCore.Database.Models;
 
 public class SystemRole : SaveUser
 {
+    [Key]
+    public long RoleID { get; set; }
 
     /// <summary>
     /// 角色 Key
@@ -48,5 +51,15 @@ public class SystemRole : SaveUser
     /// 修改时间
     /// </summary>
     public DateTime UpdateTime { get; set; }
+
+    /// <summary>
+    /// 权限列表
+    /// </summary>
+    public ICollection<SystemPower> ListSystemPower { get; set; } = new List<SystemPower>();
+
+    /// <summary>
+    /// 用户列表
+    /// </summary>
+    public ICollection<UserInfo> ListUserInfo { get; set; } = new List<UserInfo>();
 
 }

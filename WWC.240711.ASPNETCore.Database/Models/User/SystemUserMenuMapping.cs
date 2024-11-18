@@ -33,4 +33,15 @@ public class SystemUserMenuMapping : CreateUser
     /// 创建时间
     /// </summary>
     public DateTime CreateTime { get; set; }
+
+    /// <summary>
+    /// 用户信息
+    /// </summary>
+    public UserInfo UserInfo { get; set; }
+
+    /// <summary>
+    /// 菜单信息
+    /// </summary>
+    public SystemMenu Menu { get; set; }
+
 }

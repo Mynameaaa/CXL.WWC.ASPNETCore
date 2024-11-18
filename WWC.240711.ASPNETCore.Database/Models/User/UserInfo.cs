@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WWC._240711.ASPNETCore.Database.Extensions.Enum;
+using WWC._240711.ASPNETCore.Database.Models.User;
 
 namespace WWC._240711.ASPNETCore.Database.Models;
 
@@ -31,18 +32,6 @@ public class UserInfo : SaveUser
     /// </summary>
     [Column(TypeName = "nvarchar(30)")]
     public string UserPhoneNumber { get; set; }
-
-    /// <summary>
-    /// 登陆账号
-    /// </summary>
-    [Column(TypeName = "nvarchar(30)")]
-    public string UserAccount { get; set; }
-
-    /// <summary>
-    /// 密码
-    /// </summary>
-    [Column(TypeName = "nvarchar(30)")]
-    public string UserPassword { get; set; }
 
     /// <summary>
     /// 用户状态
@@ -78,4 +67,20 @@ public class UserInfo : SaveUser
     /// 修改时间
     /// </summary>
     public DateTime UpdateTime { get; set; }
+
+    /// <summary>
+    /// 用户登录信息
+    /// </summary>
+    public UserLogin UserLogin { get; set; }
+
+    /// <summary>
+    /// 用户角色列表
+    /// </summary>
+    public ICollection<SystemRole> ListSystemRole { get; set; } = new List<SystemRole>();
+
+    /// <summary>
+    /// 用户菜单列表
+    /// </summary>
+    public ICollection<SystemMenu> ListSystemMenu { get; set; } = new List<SystemMenu>();
+
 }

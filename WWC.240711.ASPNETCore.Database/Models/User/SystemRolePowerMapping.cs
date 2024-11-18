@@ -34,4 +34,14 @@ public class SystemRolePowerMapping : CreateUser
     /// </summary>
     public DateTime CreateTime { get; set; }
 
+    /// <summary>
+    /// 权限
+    /// </summary>
+    public SystemPower Power { get; set; }
+
+    /// <summary>
+    /// 角色
+    /// </summary>
+    public SystemRole Role { get; set; }
+
 }

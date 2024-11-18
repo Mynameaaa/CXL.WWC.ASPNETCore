@@ -33,4 +33,15 @@ public class SystemPowerMenuMapping : CreateUser
     /// 创建时间
     /// </summary>
     public DateTime CreateTime { get; set; }
+
+    /// <summary>
+    /// 权限
+    /// </summary>
+    public SystemPower Power { get; set; }
+
+    /// <summary>
+    /// 菜单
+    /// </summary>
+    public SystemMenu Menu { get; set; }
+
 }
