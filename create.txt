@@ -27,4 +27,5 @@
   10.8、ModelBinding  验证参数
   10.9、
 11、需要专门为 WebSocket 和 SignalR 添加一个模块
-12、
+12、增加导入导出 Excel 的功能封装，生成二维码的封装，
+
